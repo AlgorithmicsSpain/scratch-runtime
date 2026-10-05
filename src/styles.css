@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+#root {
+  display: flex;
+  flex-direction: column;
+}
+#root > :not(.runtime-bar):not(.runtime-error) {
+  flex: 1;
+  min-height: 0;
+}
+body {
+  overflow: hidden;
+  font-family: Nunito, sans-serif;
+}
+.runtime-bar {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-sizing: border-box;
+  padding: 0 16px;
+  color: #fff;
+  background: #4c97ff;
+}
+.runtime-bar strong {
+  overflow: hidden;
+  flex: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.runtime-bar button {
+  border: 0;
+  border-radius: 8px;
+  padding: 7px 16px;
+  color: #4c97ff;
+  background: #fff;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.runtime-bar button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.runtime-bar a {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+.runtime-error {
+  position: absolute;
+  z-index: 1000;
+  top: 50px;
+  left: 16px;
+  right: 16px;
+  padding: 12px;
+  color: #781b1b;
+  background: #fff1f1;
+  border-radius: 8px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
