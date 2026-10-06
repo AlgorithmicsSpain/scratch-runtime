@@ -51,6 +51,27 @@ const copyScratchGuiChunks = {
           ),
         ),
     );
+
+    const vmDirectory = await realpath(
+      resolve(runtimeDirectory, 'node_modules/@scratch/scratch-vm/dist/web'),
+    );
+    const vmAssets = resolve(vmDirectory, 'assets');
+    const staticAssetDirectory = resolve(runtimeDirectory, 'dist/assets/static/assets');
+    const workerDirectory = resolve(runtimeDirectory, 'dist/assets/static');
+    const vmAssetEntries = await readdir(vmAssets, { withFileTypes: true });
+    await mkdir(staticAssetDirectory, { recursive: true });
+    await mkdir(workerDirectory, { recursive: true });
+    await Promise.all(
+      vmAssetEntries
+        .filter((entry) => entry.isFile() && extname(entry.name) === '.js')
+        .map((entry) =>
+          copyFile(resolve(vmAssets, entry.name), resolve(staticAssetDirectory, entry.name)),
+        ),
+    );
+    await copyFile(
+      resolve(vmDirectory, 'extension-worker.js'),
+      resolve(workerDirectory, 'extension-worker.js'),
+    );
   },
 };
 
