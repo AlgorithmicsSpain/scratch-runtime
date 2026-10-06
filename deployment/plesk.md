@@ -26,8 +26,9 @@ directives instead, and avoid setting a second, conflicting CSP.
 
 The CSP allows only the LMS as a frame ancestor, blocks plugins and form submissions, and permits
 `'unsafe-eval'` only on this isolated Scratch origin because the official editor bundle requires
-it. The policy allows the Scratch asset host and the Google Fonts origins used by the runtime.
-Do not weaken the LMS CSP to make this editor work.
+it. It allows `assets.scratch.mit.edu` and `cdn.assets.scratch.mit.edu` only in the image, media,
+and connection directives needed by Scratch's official asset delivery. Do not weaken the LMS CSP
+to make this editor work.
 
 ## Verify the deployment
 
