@@ -13,6 +13,7 @@ import './styles.css';
 
 const sourceOfferUrl = import.meta.env.VITE_SOURCE_OFFER_URL;
 const sourceRevision = import.meta.env.VITE_SOURCE_REVISION;
+const playerOnly = new URLSearchParams(window.location.search).get('mode') === 'player';
 const allowedHosts = (
   import.meta.env.VITE_ALLOWED_HOST_ORIGINS ||
   (import.meta.env.DEV ? 'http://localhost:3000,http://127.0.0.1:3000' : '')
@@ -147,6 +148,7 @@ function Runtime() {
   };
 
   const saveProject = (runtime: ScratchVM): Promise<void> => {
+    if (playerOnly) return Promise.resolve();
     saveQueue.current = saveQueue.current.then(async () => {
       try {
         const blob = await runtime.saveProjectSb3();
@@ -214,13 +216,15 @@ function Runtime() {
     <>
       <header className="runtime-bar">
         <strong title={title}>{title}</strong>
-        <button
-          disabled={vm === null}
-          onClick={() => vm !== null && void saveProject(vm)}
-          type="button"
-        >
-          Guardar
-        </button>
+        {playerOnly ? null : (
+          <button
+            disabled={vm === null}
+            onClick={() => vm !== null && void saveProject(vm)}
+            type="button"
+          >
+            Guardar
+          </button>
+        )}
         <a
           href={sourceOfferUrl || 'https://www.gnu.org/licenses/agpl-3.0.html'}
           rel="noreferrer"
@@ -242,7 +246,7 @@ function Runtime() {
         canSave={false}
         canManageFiles={false}
         backpackVisible={false}
-        isEmbedded
+        isEmbedded={playerOnly}
         onVmInit={onVmInit}
         onProjectLoaded={onProjectLoaded}
         showTelemetryModal={false}
