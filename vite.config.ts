@@ -1,4 +1,4 @@
-import { copyFile, mkdir, readdir, realpath } from 'node:fs/promises';
+import { copyFile, cp, mkdir, readdir, realpath } from 'node:fs/promises';
 import { dirname, extname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -50,6 +50,20 @@ const copyScratchGuiChunks = {
             resolve(destinationDirectory, entry.name),
           ),
         ),
+    );
+
+    const guiStaticDirectory = await realpath(
+      resolve(runtimeDirectory, 'node_modules/@scratch/scratch-gui/dist/static'),
+    );
+    await cp(
+      resolve(guiStaticDirectory, 'assets'),
+      resolve(runtimeDirectory, 'dist/assets/static/assets'),
+      { recursive: true },
+    );
+    await cp(
+      resolve(guiStaticDirectory, 'blocks-media'),
+      resolve(runtimeDirectory, 'dist/static/blocks-media'),
+      { recursive: true },
     );
 
     const vmDirectory = await realpath(
