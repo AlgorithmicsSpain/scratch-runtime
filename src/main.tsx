@@ -1,4 +1,4 @@
-import GUI, { AppStateHOC, legacyConfig } from '@scratch/scratch-gui';
+import ScratchGUI, { AppStateHOC, legacyConfig } from '@scratch/scratch-gui';
 import { useCallback, useEffect, useRef, useState, type ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -34,6 +34,7 @@ const allowedHosts = (
   });
 
 interface EditorProps {
+  projectId: string;
   canChangeLanguage: boolean;
   canEditTitle: boolean;
   canSave: boolean;
@@ -65,11 +66,12 @@ const wrapEditor = AppStateHOC as unknown as (
   localesOnly: boolean,
   configFactory: () => typeof legacyConfig,
 ) => ComponentType<EditorProps>;
-const ScratchEditor = wrapEditor(
-  GUI as unknown as ComponentType<EditorProps>,
-  false,
-  () => legacyConfig,
-);
+// The published Scratch GUI is a CommonJS bundle. Vite wraps its exports as
+// `default`, so the imported default is the module object rather than GUI.
+const GUI =
+  (ScratchGUI as unknown as { default?: ComponentType<EditorProps> }).default ??
+  (ScratchGUI as ComponentType<EditorProps>);
+const ScratchEditor = wrapEditor(GUI, false, () => legacyConfig);
 
 function Runtime() {
   const [host, setHost] = useState<{ origin: string; channel: string } | null>(null);
@@ -234,6 +236,7 @@ function Runtime() {
         </p>
       )}
       <ScratchEditor
+        projectId="0"
         canChangeLanguage
         canEditTitle={false}
         canSave={false}
