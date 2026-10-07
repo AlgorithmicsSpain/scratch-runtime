@@ -38,7 +38,7 @@ const copyScratchGuiChunks = {
     const sourceDirectory = await realpath(
       resolve(runtimeDirectory, 'node_modules/@scratch/scratch-gui/dist/chunks'),
     );
-    const destinationDirectory = resolve(runtimeDirectory, 'dist/assets/chunks');
+    const destinationDirectory = resolve(runtimeDirectory, 'dist/chunks');
     const entries = await readdir(sourceDirectory, { withFileTypes: true });
     await mkdir(destinationDirectory, { recursive: true });
     await Promise.all(

@@ -14,7 +14,8 @@ origin separate from the authenticated LMS at `https://lms.algorithmicsespana.co
 3. Issue a Let's Encrypt certificate for the hostname and enable an HTTP-to-HTTPS redirect.
 4. Build the runtime and upload the **contents** of `dist/` and
    [`deployment/.htaccess`](./.htaccess) to the site's document root. `index.html` should be at
-   the document root. Do not upload source control metadata, `node_modules`, or `.env` files.
+   the document root. Keep `dist/chunks/` at `/chunks/`; Scratch storage workers are requested
+   from that root path. Do not upload source control metadata, `node_modules`, or `.env` files.
 5. Ensure the response headers in `.htaccess` are applied. If nginx serves static files without
 passing them through Apache, use
 [`plesk-nginx-headers.conf`](./plesk-nginx-headers.conf) under Plesk's additional nginx
