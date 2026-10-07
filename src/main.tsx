@@ -77,7 +77,9 @@ const ScratchEditor = wrapEditor(GUI, false, () => legacyConfig);
 function Runtime() {
   const [host, setHost] = useState<{ origin: string; channel: string } | null>(null);
   const hostRef = useRef<{ origin: string; channel: string } | null>(null);
+  const editorViewport = useRef<HTMLDivElement>(null);
   const [vm, setVm] = useState<ScratchVM | null>(null);
+  const [editorSize, setEditorSize] = useState({ width: 0, height: 0, scale: 1 });
   const vmReady = useRef(false);
   const loadingProject = useRef(false);
   const [title, setTitle] = useState('Proyecto Scratch');
@@ -85,6 +87,23 @@ function Runtime() {
   const pendingInit = useRef<Extract<HostMessage, { type: 'HOST_INIT' }> | null>(null);
   const saveTimer = useRef<number | undefined>(undefined);
   const saveQueue = useRef<Promise<void>>(Promise.resolve());
+
+  useEffect(() => {
+    const viewport = editorViewport.current;
+    if (viewport === null) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry === undefined || entry.contentRect.width === 0) return;
+      const width = entry.contentRect.width;
+      setEditorSize({
+        width,
+        height: entry.contentRect.height,
+        scale: Math.min(1, width / 1024),
+      });
+    });
+    observer.observe(viewport);
+    return () => observer.disconnect();
+  }, []);
 
   const send = useCallback((message: RuntimeMessage, transfer: Transferable[] = []) => {
     if (hostRef.current === null || window.parent === window) return;
@@ -239,23 +258,34 @@ function Runtime() {
           {error}
         </p>
       )}
-      <ScratchEditor
-        projectId="0"
-        canChangeLanguage
-        canEditTitle={false}
-        canSave={false}
-        canManageFiles={false}
-        backpackVisible={false}
-        isEmbedded={playerOnly}
-        onVmInit={onVmInit}
-        onProjectLoaded={onProjectLoaded}
-        showTelemetryModal={false}
-        canUseCloud={false}
-        enableCommunity={false}
-        onExtensionButtonClick={() =>
-          setError('Las extensiones externas están desactivadas por seguridad.')
-        }
-      />
+      <div className="scratch-editor-viewport" ref={editorViewport}>
+        <div
+          className="scratch-editor-canvas"
+          style={{
+            width: `${editorSize.width / editorSize.scale}px`,
+            height: `${editorSize.height / editorSize.scale}px`,
+            transform: `scale(${editorSize.scale})`,
+          }}
+        >
+          <ScratchEditor
+            projectId="0"
+            canChangeLanguage
+            canEditTitle={false}
+            canSave={false}
+            canManageFiles={false}
+            backpackVisible={false}
+            isEmbedded={playerOnly}
+            onVmInit={onVmInit}
+            onProjectLoaded={onProjectLoaded}
+            showTelemetryModal={false}
+            canUseCloud={false}
+            enableCommunity={false}
+            onExtensionButtonClick={() =>
+              setError('Las extensiones externas están desactivadas por seguridad.')
+            }
+          />
+        </div>
+      </div>
     </>
   );
 }

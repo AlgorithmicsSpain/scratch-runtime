@@ -39,17 +39,20 @@ const copyScratchGuiChunks = {
       resolve(runtimeDirectory, 'node_modules/@scratch/scratch-gui/dist/chunks'),
     );
     const destinationDirectory = resolve(runtimeDirectory, 'dist/chunks');
+    const assetChunkDirectory = resolve(runtimeDirectory, 'dist/assets/chunks');
     const entries = await readdir(sourceDirectory, { withFileTypes: true });
     await mkdir(destinationDirectory, { recursive: true });
+    await mkdir(assetChunkDirectory, { recursive: true });
     await Promise.all(
       entries
         .filter((entry) => entry.isFile() && extname(entry.name) === '.js')
-        .map((entry) =>
-          copyFile(
-            resolve(sourceDirectory, entry.name),
-            resolve(destinationDirectory, entry.name),
-          ),
-        ),
+        .map(async (entry) => {
+          const source = resolve(sourceDirectory, entry.name);
+          await Promise.all([
+            copyFile(source, resolve(destinationDirectory, entry.name)),
+            copyFile(source, resolve(assetChunkDirectory, entry.name)),
+          ]);
+        }),
     );
 
     const guiStaticDirectory = await realpath(

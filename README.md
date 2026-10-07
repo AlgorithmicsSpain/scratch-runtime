@@ -34,6 +34,10 @@ The `dist/` directory is a static site; deploy its contents to a dedicated HTTPS
 not to the authenticated LMS origin. See [`deployment/plesk.md`](./deployment/plesk.md) for the
 DNS, Plesk, TLS, and response-header configuration.
 
+When the iframe is narrower than Scratch's 1024 px minimum editor width, the runtime scales the
+editor to fit without horizontal scrolling. The LMS provides a fullscreen control with a
+persistent exit button in its top bar.
+
 ## Runtime protocol
 
 The LMS initializes the iframe with a versioned `HOST_INIT` message. The runtime validates the
