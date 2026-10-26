@@ -94,11 +94,13 @@ function Runtime() {
 
     const observer = new ResizeObserver(([entry]) => {
       if (entry === undefined || entry.contentRect.width === 0) return;
-      const width = entry.contentRect.width;
+      const { width, height } = entry.contentRect;
+      // Scratch GUI lays out for at least 1024×640: below that in either direction it
+      // clips (the sprite list falls off the bottom), so scale it down to fit both.
       setEditorSize({
         width,
-        height: entry.contentRect.height,
-        scale: Math.min(1, width / 1024),
+        height,
+        scale: Math.min(1, width / 1024, height > 0 ? height / 640 : 1),
       });
     });
     observer.observe(viewport);
