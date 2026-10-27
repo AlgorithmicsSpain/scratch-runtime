@@ -33,12 +33,13 @@ body {
   font-family: Nunito, sans-serif;
 }
 .runtime-bar {
-  height: 48px;
+  height: 32px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   box-sizing: border-box;
-  padding: 0 16px;
+  padding: 0 12px;
+  font-size: 13px;
   color: #fff;
   background: #4c97ff;
 }
@@ -50,8 +51,8 @@ body {
 }
 .runtime-bar button {
   border: 0;
-  border-radius: 8px;
-  padding: 7px 16px;
+  border-radius: 6px;
+  padding: 3px 12px;
   color: #4c97ff;
   background: #fff;
   font: inherit;
@@ -70,7 +71,7 @@ body {
 .runtime-error {
   position: absolute;
   z-index: 1000;
-  top: 50px;
+  top: 34px;
   left: 16px;
   right: 16px;
   padding: 12px;
